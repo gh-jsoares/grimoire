@@ -1,0 +1,143 @@
+format = 1
+
+title = "tmux"
+icon = ""
+order = 10
+aliases = ["tm", "multiplexer"]
+
+[[sections]]
+id = "navigation"
+title = "Navigation"
+layout = "stack"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["C-b h/j/k/l"]
+description = "Panes (tmux)"
+
+[[sections.items.entries]]
+keys = ["Ctrl-h/j/k/l"]
+description = "Panes (vim-aware)"
+
+[[sections.items.entries]]
+keys = ["C-b < / >"]
+description = "Swap window L/R"
+
+[[sections]]
+id = "copy-mode"
+title = "Copy Mode"
+layout = "stack"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["C-b ["]
+description = "Enter copy mode"
+
+[[sections.items.entries]]
+keys = ["v"]
+description = "Begin selection"
+
+[[sections.items.entries]]
+keys = ["y"]
+description = "Yank to clipboard"
+
+[[sections]]
+id = "windows-panes"
+title = "Windows & Panes"
+layout = "stack"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["C-b c"]
+description = "New window"
+
+[[sections.items.entries]]
+keys = ["C-b |"]
+description = "Split horizontal"
+
+[[sections.items.entries]]
+keys = ["C-b -"]
+description = "Split vertical"
+
+[[sections.items.entries]]
+keys = ["C-b z"]
+description = "Zoom toggle"
+
+[[sections]]
+id = "tools"
+title = "Git & Tools"
+layout = "stack"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["C-b g"]
+description = "Lazygit"
+
+[[sections.items.entries]]
+keys = ["C-b I"]
+description = "tpack TUI"
+
+[[sections.items.entries]]
+keys = ["C-b Tab"]
+description = "Extrakto"
+
+[[sections]]
+id = "sessions"
+title = "Sessions"
+layout = "stack"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["C-b o"]
+description = "Picker (sesh)"
+
+[[sections.items.entries]]
+keys = ["C-b d"]
+description = "Detach"
+
+[[sections.items.entries]]
+keys = ["C-b $"]
+description = "Rename session"
+
+[[sections]]
+id = "config"
+title = "Config"
+layout = "stack"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["C-b r"]
+description = "Reload config"
+
+[[sections.items.entries]]
+keys = ["C-b ?"]
+description = "This cheatsheet"
+
+[[sections.items.entries]]
+keys = ["C-b ,"]
+description = "Rename window"
+
+[[sections.items]]
+type = "separator"
+
+[[sections.items]]
+type = "text"
+text = "Config lives at ~/.config/tmux/tmux.conf"
+
+[[sections.items]]
+type = "link"
+label = "tmux wiki"
+url = "https://github.com/tmux/tmux/wiki"
+description = "Official docs & FAQ"

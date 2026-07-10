@@ -1,0 +1,81 @@
+format = 1
+
+title = "Git"
+icon = ""
+order = 20
+aliases = ["g"]
+
+[[sections]]
+id = "basics"
+title = "Basics"
+layout = "stack"
+
+[[sections.items]]
+type = "command"
+command = "git status"
+description = "Show working tree status"
+
+[[sections.items]]
+type = "command"
+command = "git add -p"
+description = "Stage changes interactively"
+
+[[sections.items]]
+type = "command"
+command = "git log --oneline"
+description = "Compact history"
+
+[[sections.items]]
+type = "command"
+command = "git log --oneline --graph --all"
+description = "Show all branches as a graph"
+
+[[sections.items]]
+type = "command"
+command = "git diff --stat HEAD~3"
+description = "Summary of last 3 commits"
+
+[[sections.items]]
+type = "command"
+command = "git stash push -m 'wip'"
+description = "Stash with a label"
+
+[[sections]]
+id = "branching"
+title = "Branching"
+layout = "stack"
+
+[[sections.items]]
+type = "command"
+command = "git branch <name>"
+description = "Create branch"
+
+[[sections.items]]
+type = "command"
+command = "git switch <name>"
+description = "Switch branch"
+
+[[sections.items]]
+type = "command"
+command = "git merge <branch>"
+description = "Merge branch"
+
+[[sections.items]]
+type = "separator"
+label = "Tips"
+
+[[sections.items]]
+type = "text"
+text = "Use interactive rebase to clean up commits before merging."
+
+[[sections.items]]
+type = "link"
+label = "Git Flight Rules"
+url = "https://github.com/k88hudson/git-flight-rules"
+description = "What to do when things go wrong"
+
+[[sections.items]]
+type = "callout"
+style = "warning"
+title = "Warning"
+text = "Never force-push to shared branches."
