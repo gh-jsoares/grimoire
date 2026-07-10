@@ -2,6 +2,8 @@
 
 A terminal cheatsheet viewer built with Go and the [Charm](https://charm.sh) ecosystem. Renders `.grim` TOML files as styled reference cards with responsive multi-column layout.
 
+> **Note:** This project was vibe coded with [Claude](https://claude.ai) (Anthropic). The entire codebase was generated through conversational AI pair programming.
+
 ## Features
 
 - Responsive 1/2/3 column layout based on terminal width
