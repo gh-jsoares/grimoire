@@ -39,9 +39,8 @@ type Model struct {
 	totalLines    int
 
 	// Command navigation
-	commands     []string // flat list of commands in current doc
-	commandIdx   int      // -1 = no selection
-	commandLines []int    // line number of each command in rendered output
+	commands   []string // flat list of commands in current doc
+	commandIdx int      // -1 = no selection
 
 	// Link overlay
 	links      []LinkEntry
@@ -54,8 +53,7 @@ type Model struct {
 	searchFilter bool // true = filter mode, false = highlight mode
 
 	// Status flash
-	flashMsg  string
-	flashTime time.Time
+	flashMsg string
 
 	Width  int
 	Height int
@@ -293,7 +291,7 @@ func (m *Model) handleLinkKey(key string) tea.Cmd {
 	case "y", "enter":
 		if m.linkIdx >= 0 && m.linkIdx < len(m.links) {
 			url := m.links[m.linkIdx].URL
-			clipboard.Copy(url)
+			_ = clipboard.Copy(url)
 			m.showLinks = false
 			m.flashMsg = "Copied: " + url
 			return tea.Tick(2*time.Second, func(time.Time) tea.Msg {
@@ -421,7 +419,7 @@ func (m *Model) yankCommand() tea.Cmd {
 		return nil
 	}
 	cmd := m.commands[m.commandIdx]
-	clipboard.Copy(cmd)
+	_ = clipboard.Copy(cmd)
 	m.flashMsg = "Copied: " + cmd
 	return tea.Tick(2*time.Second, func(time.Time) tea.Msg {
 		return clearFlashMsg{}

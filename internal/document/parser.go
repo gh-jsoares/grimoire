@@ -178,37 +178,19 @@ func convertItem(ri rawItem) Item {
 	}
 
 	for _, e := range ri.Entries {
-		item.Entries = append(item.Entries, KeybindEntry{
-			Keys:        e.Keys,
-			Description: e.Description,
-			Command:     e.Command,
-			Tags:        e.Tags,
-		})
+		item.Entries = append(item.Entries, KeybindEntry(e))
 	}
 
 	for _, r := range ri.Rows {
-		item.Rows = append(item.Rows, TableRow{
-			Values: r.Values,
-			Copy:   r.Copy,
-		})
+		item.Rows = append(item.Rows, TableRow(r))
 	}
 
 	for _, cc := range ri.ColumnConfig {
-		item.ColumnConfig = append(item.ColumnConfig, ColumnConfig{
-			Name:     cc.Name,
-			Width:    cc.Width,
-			Priority: cc.Priority,
-			Align:    cc.Align,
-		})
+		item.ColumnConfig = append(item.ColumnConfig, ColumnConfig(cc))
 	}
 
 	for _, c := range ri.Cards {
-		item.Cards = append(item.Cards, Card{
-			Title:       c.Title,
-			Value:       c.Value,
-			Description: c.Description,
-			Copy:        c.Copy,
-		})
+		item.Cards = append(item.Cards, Card(c))
 	}
 
 	return item

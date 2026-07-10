@@ -121,9 +121,5 @@ func ItemMatches(item document.Item, q string) bool {
 		}
 	}
 
-	if strings.Contains(strings.ToLower(item.Title), q) {
-		return true
-	}
-
-	return false
+	return strings.Contains(strings.ToLower(item.Title), q)
 }
