@@ -17,19 +17,11 @@ builds:
       - arm64
 
 archives:
-  - format: tar.gz
+  - formats: [tar.gz]
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
-        format: zip
-
-brews:
-  - repository:
-      owner: gh-jsoares
-      name: homebrew-tap
-    homepage: "https://github.com/gh-jsoares/grimoire"
-    description: "Terminal cheatsheet viewer"
-    license: "MIT"
+        formats: [zip]
 
 checksum:
   name_template: "checksums.txt"
