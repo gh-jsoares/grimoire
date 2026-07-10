@@ -26,6 +26,15 @@ if [ -z "$VERSION" ]; then
     exit 1
 fi
 
+# Check if already up-to-date
+if command -v grimoire >/dev/null 2>&1; then
+    CURRENT="$(grimoire --version 2>/dev/null | awk '{print $2}')"
+    if [ "$CURRENT" = "$VERSION" ]; then
+        echo "grimoire is already up-to-date ($VERSION)"
+        exit 0
+    fi
+fi
+
 echo "Installing grimoire ${VERSION} (${OS}/${ARCH})..."
 
 # Download and extract
