@@ -2,12 +2,10 @@ name: Demo
 
 on:
   push:
+    tags: ["v*"]
     branches: [main]
     paths:
       - "demo.tape"
-      - "examples/**"
-      - "internal/**"
-      - "cmd/**"
   workflow_dispatch:
 
 jobs:
