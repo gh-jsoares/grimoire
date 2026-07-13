@@ -22,14 +22,31 @@ jobs:
           go-version: "1.24"
 
       - name: Build grimoire
-        run: go build -o grimoire ./cmd/grimoire
+        run: |
+          go build -o grimoire ./cmd/grimoire
+          sudo mv grimoire /usr/local/bin/
+
+      - name: Cache VHS binary
+        id: cache-vhs
+        uses: actions/cache@v4
+        with:
+          path: ~/go/bin/vhs
+          key: vhs-${{ runner.os }}-latest
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          go install github.com/charmbracelet/vhs@latest
-          sudo apt-get install -y ttyd
+          sudo apt-get install -y ffmpeg ttyd
+          if [ ! -f ~/go/bin/vhs ]; then
+            go install github.com/charmbracelet/vhs@latest
+          fi
+
+      - name: Install Nerd Font
+        run: |
+          mkdir -p ~/.local/share/fonts
+          curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz \
+            | tar -xJ -C ~/.local/share/fonts
+          fc-cache -f
 
       - name: Record demo
         run: vhs demo.tape
