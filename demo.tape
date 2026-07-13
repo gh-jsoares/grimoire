@@ -2,6 +2,8 @@ Output demo.gif
 
 Set Shell "bash"
 Set FontSize 14
+Set Env "TERM" "xterm-256color"
+Set Env "COLORTERM" "truecolor"
 Set Width 1200
 Set Height 700
 Set Theme "Catppuccin Mocha"
