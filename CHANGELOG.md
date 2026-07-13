@@ -1,24 +1,41 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [0.1.0] - 2024-12-01
+## 1.0.0 — 2026-07-13
 
 ### Added
 
-- Responsive 1/2/3 column terminal layout
-- Tab switching between multiple cheatsheets
-- Vim-style keybinds (j/k scroll, H/L tabs, n/N command navigation)
-- Command navigation and clipboard yanking (pbcopy, xclip, xsel, OSC 52)
-- Link overlay picker
-- Search with filter and highlight modes
-- Nerd Font icon support
-- `.grim` TOML file format with 7 item types
-- Library resolution via `$GRIMOIRE_HOME`, XDG, or `~/.config/grimoire`
-- Cross-platform builds (linux/darwin/windows, amd64/arm64)
-- Shell installer script
+- remove install.md, consolidate install in README with homebrew as recommended
+- add shell completions, --no-color flag, clipboard error feedback, narrow terminal guard
+- polish demo GIF with padding, rounded corners, nerd font, ayu theme
+- add VHS demo tape, man page, GoDoc comments, and invalid test fixtures
 
-[0.1.0]: https://github.com/gh-jsoares/grimoire/releases/tag/v0.1.0
+### Documentation
+
+- add open-source community files, tests, and examples
+
+### Fixed
+
+- replace retired Go Report Card badge with Go version badge
+- add CLICOLOR_FORCE to bypass TTY check, use Ayu theme
+- use correct VHS Env syntax for color vars
+- set TERM and COLORTERM in demo.tape for color output
+- bypass vhs-action, install vhs and dependencies manually
+- install ffmpeg before vhs-action, add write permissions
+
+## 0.1.0 — 2026-07-10
+
+### Added
+
+- skip install if already up-to-date
+- initial release
+
+### Documentation
+
+- add vibe coded disclaimer
+
+### Fixed
+
+- remove homebrew tap (not created yet), fix deprecated goreleaser fields
+- gitignore was excluding cmd/grimoire directory
+- resolve lint errors (errcheck, unused, gosimple)
+
