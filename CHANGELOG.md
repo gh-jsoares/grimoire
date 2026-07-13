@@ -9,12 +9,18 @@
 - polish demo GIF with padding, rounded corners, nerd font, ayu theme
 - add VHS demo tape, man page, GoDoc comments, and invalid test fixtures
 
+### Changed
+
+- replace goreleaser with simple go build + action-gh-release
+
 ### Documentation
 
+- update changelog for v1.0.0 [skip ci]
 - add open-source community files, tests, and examples
 
 ### Fixed
 
+- run goreleaser before changelog commit to avoid tag mismatch
 - replace retired Go Report Card badge with Go version badge
 - add CLICOLOR_FORCE to bypass TTY check, use Ayu theme
 - use correct VHS Env syntax for color vars
