@@ -30,20 +30,24 @@ jobs:
           DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           LDFLAGS="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE}"
 
-          GOOS=darwin GOARCH=arm64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_darwin_arm64 ./cmd/grimoire
-          GOOS=darwin GOARCH=amd64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_darwin_amd64 ./cmd/grimoire
-          GOOS=linux GOARCH=arm64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_linux_arm64 ./cmd/grimoire
-          GOOS=linux GOARCH=amd64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_linux_amd64 ./cmd/grimoire
+          for TARGET in darwin_arm64 darwin_amd64 linux_arm64 linux_amd64; do
+            OS="${TARGET%_*}"
+            ARCH="${TARGET#*_}"
+            mkdir -p "dist/${TARGET}"
+            GOOS=${OS} GOARCH=${ARCH} go build -ldflags "${LDFLAGS}" -o "dist/${TARGET}/grimoire" ./cmd/grimoire
+            cp docs/grimoire.1 "dist/${TARGET}/grimoire.1"
+            tar -czf "dist/grimoire_${TARGET}.tar.gz" -C "dist/${TARGET}" grimoire grimoire.1
+          done
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
-            dist/grimoire_darwin_arm64
-            dist/grimoire_darwin_amd64
-            dist/grimoire_linux_arm64
-            dist/grimoire_linux_amd64
+            dist/grimoire_darwin_arm64.tar.gz
+            dist/grimoire_darwin_amd64.tar.gz
+            dist/grimoire_linux_arm64.tar.gz
+            dist/grimoire_linux_amd64.tar.gz
 
       - name: Generate changelog
         uses: orhun/git-cliff-action@v4
@@ -66,8 +70,8 @@ jobs:
           TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
         run: |
           VERSION=${GITHUB_REF_NAME#v}
-          SHA_ARM64=$(shasum -a 256 dist/grimoire_darwin_arm64 | cut -d' ' -f1)
-          SHA_AMD64=$(shasum -a 256 dist/grimoire_darwin_amd64 | cut -d' ' -f1)
+          SHA_ARM64=$(shasum -a 256 dist/grimoire_darwin_arm64.tar.gz | cut -d' ' -f1)
+          SHA_AMD64=$(shasum -a 256 dist/grimoire_darwin_amd64.tar.gz | cut -d' ' -f1)
 
           git clone https://x-access-token:${TAP_TOKEN}@github.com/gh-jsoares/homebrew-tap.git tap
           cd tap
@@ -81,17 +85,17 @@ jobs:
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_arm64"
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_arm64.tar.gz"
                 sha256 "${SHA_ARM64}"
               else
-                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_amd64"
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_amd64.tar.gz"
                 sha256 "${SHA_AMD64}"
               end
             end
 
             def install
-              binary = Hardware::CPU.arm? ? "grimoire_darwin_arm64" : "grimoire_darwin_amd64"
-              bin.install binary => "grimoire"
+              bin.install "grimoire"
+              man1.install "grimoire.1"
             end
 
             test do

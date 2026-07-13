@@ -61,6 +61,16 @@ grimoire --library ~/dir  # Custom library path
 grimoire --completion zsh # Output shell completions
 ```
 
+### tmux Popup
+
+Grimoire works great as a tmux popup. Add to your `tmux.conf`:
+
+```sh
+bind-key ? display-popup -E -w 90% -h 85% "grimoire"
+```
+
+Press `?` in tmux to open your cheatsheets in a floating popup. See [docs/tmux.md](docs/tmux.md) for more tips.
+
 ### Library Resolution
 
 Grimoire looks for `.grim` files in:
@@ -91,7 +101,7 @@ Grimoire reads `.grim` files — TOML with a specific schema. See [docs/file-for
 - [Keybinds](docs/keybinds.md)
 - [File Format](docs/file-format.md)
 - [tmux Integration](docs/tmux.md)
-- [Man Page](docs/grimoire.1) — install with `cp docs/grimoire.1 /usr/local/share/man/man1/`
+- [Man Page](docs/grimoire.1) — installed automatically via Homebrew or `install.sh`
 
 ## Contributing
 

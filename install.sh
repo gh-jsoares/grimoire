@@ -45,11 +45,22 @@ trap 'rm -rf "$TMPDIR"' EXIT
 curl -sL "$URL" -o "$TMPDIR/grimoire.tar.gz"
 tar -xzf "$TMPDIR/grimoire.tar.gz" -C "$TMPDIR"
 
-# Install
+# Install binary
 if [ -w "$INSTALL_DIR" ]; then
     mv "$TMPDIR/grimoire" "$INSTALL_DIR/grimoire"
 else
     sudo mv "$TMPDIR/grimoire" "$INSTALL_DIR/grimoire"
+fi
+
+# Install man page
+MAN_DIR="${GRIMOIRE_MAN_DIR:-/usr/local/share/man/man1}"
+if [ -f "$TMPDIR/grimoire.1" ]; then
+    if [ -w "$MAN_DIR" ] 2>/dev/null || mkdir -p "$MAN_DIR" 2>/dev/null; then
+        mv "$TMPDIR/grimoire.1" "$MAN_DIR/grimoire.1"
+    elif sudo mkdir -p "$MAN_DIR"; then
+        sudo mv "$TMPDIR/grimoire.1" "$MAN_DIR/grimoire.1"
+    fi
+    echo "Installed man page to ${MAN_DIR}/grimoire.1"
 fi
 
 echo "Installed grimoire to ${INSTALL_DIR}/grimoire"
