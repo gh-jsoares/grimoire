@@ -23,12 +23,27 @@ jobs:
       - name: Run tests
         run: go test ./...
 
-      - uses: goreleaser/goreleaser-action@v6
+      - name: Build binaries
+        run: |
+          VERSION=${GITHUB_REF_NAME}
+          COMMIT=$(git rev-parse --short HEAD)
+          DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          LDFLAGS="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE}"
+
+          GOOS=darwin GOARCH=arm64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_darwin_arm64 ./cmd/grimoire
+          GOOS=darwin GOARCH=amd64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_darwin_amd64 ./cmd/grimoire
+          GOOS=linux GOARCH=arm64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_linux_arm64 ./cmd/grimoire
+          GOOS=linux GOARCH=amd64 go build -ldflags "${LDFLAGS}" -o dist/grimoire_linux_amd64 ./cmd/grimoire
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
         with:
-          version: "~> v2"
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
+          files: |
+            dist/grimoire_darwin_arm64
+            dist/grimoire_darwin_amd64
+            dist/grimoire_linux_arm64
+            dist/grimoire_linux_amd64
 
       - name: Generate changelog
         uses: orhun/git-cliff-action@v4
@@ -51,10 +66,8 @@ jobs:
           TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
         run: |
           VERSION=${GITHUB_REF_NAME#v}
-
-          # Get checksums from goreleaser archives
-          SHA_DARWIN_ARM64=$(grep "grimoire_darwin_arm64.tar.gz" dist/checksums.txt | cut -d' ' -f1)
-          SHA_DARWIN_AMD64=$(grep "grimoire_darwin_amd64.tar.gz" dist/checksums.txt | cut -d' ' -f1)
+          SHA_ARM64=$(shasum -a 256 dist/grimoire_darwin_arm64 | cut -d' ' -f1)
+          SHA_AMD64=$(shasum -a 256 dist/grimoire_darwin_amd64 | cut -d' ' -f1)
 
           git clone https://x-access-token:${TAP_TOKEN}@github.com/gh-jsoares/homebrew-tap.git tap
           cd tap
@@ -68,25 +81,17 @@ jobs:
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_arm64.tar.gz"
-                sha256 "${SHA_DARWIN_ARM64}"
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_arm64"
+                sha256 "${SHA_ARM64}"
               else
-                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_amd64.tar.gz"
-                sha256 "${SHA_DARWIN_AMD64}"
-              end
-            end
-
-            on_linux do
-              if Hardware::CPU.arm?
-                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_linux_arm64.tar.gz"
-              else
-                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_linux_amd64.tar.gz"
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_amd64"
+                sha256 "${SHA_AMD64}"
               end
             end
 
             def install
-              bin.install "grimoire"
-              man1.install "docs/grimoire.1"
+              binary = Hardware::CPU.arm? ? "grimoire_darwin_arm64" : "grimoire_darwin_amd64"
+              bin.install binary => "grimoire"
             end
 
             test do
