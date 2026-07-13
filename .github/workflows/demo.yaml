@@ -1,0 +1,42 @@
+name: Demo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "demo.tape"
+      - "examples/**"
+      - "internal/**"
+      - "cmd/**"
+  workflow_dispatch:
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Build grimoire
+        run: go build -o grimoire ./cmd/grimoire
+
+      - uses: charmbracelet/vhs-action@v2
+        with:
+          path: demo.tape
+
+      - name: Push to assets branch
+        run: |
+          cp demo.gif /tmp/demo.gif
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin assets || true
+          git checkout --orphan assets-tmp
+          git rm -rf .
+          cp /tmp/demo.gif demo.gif
+          git add demo.gif
+          git commit -m "update demo gif"
+          git branch -M assets-tmp assets
+          git push origin assets --force

@@ -7,6 +7,8 @@
 
 A terminal cheatsheet viewer built with Go and the [Charm](https://charm.sh) ecosystem. Renders `.grim` TOML files as styled reference cards with responsive multi-column layout.
 
+![Demo](https://raw.githubusercontent.com/gh-jsoares/grimoire/assets/demo.gif)
+
 > **Note:** This project was vibe coded with [Claude](https://claude.ai) (Anthropic). The entire codebase was generated through conversational AI pair programming.
 
 ## Features
@@ -69,14 +71,6 @@ See [docs/keybinds.md](docs/keybinds.md) for the full reference.
 ## File Format
 
 Grimoire reads `.grim` files — TOML with a specific schema. See [docs/file-format.md](docs/file-format.md) for the full specification.
-
-## Demo
-
-To record the demo GIF (requires [vhs](https://github.com/charmbracelet/vhs)):
-
-```sh
-vhs demo.tape
-```
 
 ## Documentation
 
