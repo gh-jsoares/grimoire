@@ -2,12 +2,13 @@ Output demo.gif
 
 Set Shell "bash"
 Set FontSize 14
+Set Theme "Ayu"
 
 Env TERM "xterm-256color"
 Env COLORTERM "truecolor"
+Env CLICOLOR_FORCE "1"
 Set Width 1200
 Set Height 700
-Set Theme "Catppuccin Mocha"
 
 Type "./grimoire examples/"
 Enter
