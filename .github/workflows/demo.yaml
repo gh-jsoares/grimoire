@@ -8,6 +8,9 @@ on:
       - "demo.tape"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   record:
     runs-on: ubuntu-latest
@@ -21,9 +24,13 @@ jobs:
       - name: Build grimoire
         run: go build -o grimoire ./cmd/grimoire
 
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
       - uses: charmbracelet/vhs-action@v2
         with:
           path: demo.tape
+          install-fonts: true
 
       - name: Push to assets branch
         run: |
