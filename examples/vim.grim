@@ -1,0 +1,136 @@
+format = 1
+
+title = "Vim"
+icon = ""
+order = 2
+aliases = ["vi", "nvim"]
+
+[[sections]]
+id = "modes"
+title = "Modes"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["i"]
+description = "Insert mode"
+
+[[sections.items.entries]]
+keys = ["v"]
+description = "Visual mode"
+
+[[sections.items.entries]]
+keys = ["V"]
+description = "Visual line mode"
+
+[[sections.items.entries]]
+keys = ["Ctrl+v"]
+description = "Visual block mode"
+
+[[sections.items.entries]]
+keys = ["Esc"]
+description = "Normal mode"
+
+[[sections]]
+id = "movement"
+title = "Movement"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["w"]
+description = "Next word"
+
+[[sections.items.entries]]
+keys = ["b"]
+description = "Previous word"
+
+[[sections.items.entries]]
+keys = ["0"]
+description = "Start of line"
+
+[[sections.items.entries]]
+keys = ["$"]
+description = "End of line"
+
+[[sections.items.entries]]
+keys = ["gg"]
+description = "Top of file"
+
+[[sections.items.entries]]
+keys = ["G"]
+description = "Bottom of file"
+
+[[sections.items.entries]]
+keys = ["Ctrl+d"]
+description = "Half-page down"
+
+[[sections.items.entries]]
+keys = ["Ctrl+u"]
+description = "Half-page up"
+
+[[sections]]
+id = "editing"
+title = "Editing"
+
+[[sections.items]]
+type = "keybind-list"
+
+[[sections.items.entries]]
+keys = ["dd"]
+description = "Delete line"
+
+[[sections.items.entries]]
+keys = ["yy"]
+description = "Yank (copy) line"
+
+[[sections.items.entries]]
+keys = ["p"]
+description = "Paste after cursor"
+
+[[sections.items.entries]]
+keys = ["u"]
+description = "Undo"
+
+[[sections.items.entries]]
+keys = ["Ctrl+r"]
+description = "Redo"
+
+[[sections.items.entries]]
+keys = ["ciw"]
+description = "Change inner word"
+
+[[sections.items.entries]]
+keys = ["."]
+description = "Repeat last change"
+
+[[sections]]
+id = "commands"
+title = "Commands"
+
+[[sections.items]]
+type = "command"
+command = ":w"
+description = "Save"
+
+[[sections.items]]
+type = "command"
+command = ":q"
+description = "Quit"
+
+[[sections.items]]
+type = "command"
+command = ":wq"
+description = "Save and quit"
+
+[[sections.items]]
+type = "command"
+command = ":%s/old/new/g"
+description = "Find and replace (whole file)"
+
+[[sections.items]]
+type = "command"
+command = ":noh"
+description = "Clear search highlights"

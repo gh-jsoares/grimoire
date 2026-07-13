@@ -1,0 +1,35 @@
+# Contributing to Grimoire
+
+Thank you for your interest in contributing to Grimoire!
+
+## Prerequisites
+
+- Go 1.24+
+- [golangci-lint](https://golangci-lint.run/welcome/install/)
+
+## Development Setup
+
+```sh
+git clone https://github.com/gh-jsoares/grimoire.git
+cd grimoire
+make build
+make test
+make lint
+```
+
+## Making Changes
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/my-feature`)
+3. Make your changes
+4. Run tests and lint (`make test && make lint`)
+5. Commit using [conventional commits](https://www.conventionalcommits.org/) (e.g. `feat:`, `fix:`, `docs:`)
+6. Open a pull request against `main`
+
+## Contributing Cheatsheets
+
+`.grim` file contributions are welcome! See [docs/file-format.md](docs/file-format.md) for the format specification.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.

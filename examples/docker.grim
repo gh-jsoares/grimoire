@@ -1,0 +1,89 @@
+format = 1
+
+title = "Docker"
+icon = "󰡨"
+order = 1
+aliases = ["dk"]
+
+[[sections]]
+id = "containers"
+title = "Containers"
+
+[[sections.items]]
+type = "command"
+command = "docker ps"
+description = "List running containers"
+
+[[sections.items]]
+type = "command"
+command = "docker ps -a"
+description = "List all containers"
+
+[[sections.items]]
+type = "command"
+command = "docker run -it --rm <image> sh"
+description = "Run interactive container"
+
+[[sections.items]]
+type = "command"
+command = "docker exec -it <container> sh"
+description = "Shell into running container"
+
+[[sections.items]]
+type = "command"
+command = "docker logs -f <container>"
+description = "Follow container logs"
+
+[[sections]]
+id = "images"
+title = "Images"
+
+[[sections.items]]
+type = "command"
+command = "docker build -t <name> ."
+description = "Build image from Dockerfile"
+
+[[sections.items]]
+type = "command"
+command = "docker images"
+description = "List local images"
+
+[[sections.items]]
+type = "command"
+command = "docker rmi <image>"
+description = "Remove an image"
+
+[[sections]]
+id = "cleanup"
+title = "Cleanup"
+
+[[sections.items]]
+type = "callout"
+style = "warning"
+text = "These commands remove resources permanently."
+
+[[sections.items]]
+type = "command"
+command = "docker system prune -a"
+description = "Remove all unused data"
+
+[[sections.items]]
+type = "command"
+command = "docker volume prune"
+description = "Remove unused volumes"
+
+[[sections]]
+id = "links"
+title = "Resources"
+
+[[sections.items]]
+type = "link"
+label = "Docker Docs"
+url = "https://docs.docker.com"
+description = "Official documentation"
+
+[[sections.items]]
+type = "link"
+label = "Dockerfile Reference"
+url = "https://docs.docker.com/reference/dockerfile/"
+description = "Dockerfile syntax"
