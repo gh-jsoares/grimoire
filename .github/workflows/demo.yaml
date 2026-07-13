@@ -24,13 +24,15 @@ jobs:
       - name: Build grimoire
         run: go build -o grimoire ./cmd/grimoire
 
-      - name: Install ffmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          go install github.com/charmbracelet/vhs@latest
+          sudo apt-get install -y ttyd
 
-      - uses: charmbracelet/vhs-action@v2
-        with:
-          path: demo.tape
-          install-fonts: true
+      - name: Record demo
+        run: vhs demo.tape
 
       - name: Push to assets branch
         run: |
