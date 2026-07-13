@@ -1,7 +1,7 @@
 # Grimoire
 
 [![CI](https://github.com/gh-jsoares/grimoire/actions/workflows/ci.yaml/badge.svg)](https://github.com/gh-jsoares/grimoire/actions/workflows/ci.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/gh-jsoares/grimoire)](https://goreportcard.com/report/github.com/gh-jsoares/grimoire)
+[![Go](https://img.shields.io/github/go-mod/go-version/gh-jsoares/grimoire)](https://go.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/gh-jsoares/grimoire)](https://github.com/gh-jsoares/grimoire/releases/latest)
 
