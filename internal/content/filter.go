@@ -6,6 +6,7 @@ import (
 	"github.com/gh-jsoares/grimoire/internal/document"
 )
 
+// FilterDocument returns a copy of doc containing only items that match the query.
 func FilterDocument(doc *document.Document, query string) *document.Document {
 	if query == "" {
 		return doc
@@ -70,6 +71,7 @@ func FilterDocument(doc *document.Document, query string) *document.Document {
 	return filtered
 }
 
+// ItemMatches reports whether an item's content matches the lowercase query string.
 func ItemMatches(item document.Item, q string) bool {
 	switch item.Type {
 	case "keybind-list":

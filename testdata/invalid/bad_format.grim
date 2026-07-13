@@ -1,0 +1,11 @@
+format = 99
+
+title = "Bad Format"
+
+[[sections]]
+id = "s1"
+title = "Section"
+
+[[sections.items]]
+type = "text"
+text = "This has an unsupported format version."

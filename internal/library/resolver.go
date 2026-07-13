@@ -9,6 +9,7 @@ import (
 	"github.com/gh-jsoares/grimoire/internal/document"
 )
 
+// Resolve finds a document by path, filename, title, or alias (with case-insensitive fallback).
 func Resolve(arg string, lib *Library) (*document.Document, error) {
 	// Direct path
 	if strings.HasSuffix(arg, ".grim") || strings.Contains(arg, string(os.PathSeparator)) || strings.HasPrefix(arg, ".") {

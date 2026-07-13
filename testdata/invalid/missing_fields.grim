@@ -1,0 +1,13 @@
+format = 1
+
+title = "Missing Fields"
+
+[[sections]]
+id = "s1"
+title = ""
+
+[[sections.items]]
+type = "command"
+
+[[sections.items]]
+type = ""

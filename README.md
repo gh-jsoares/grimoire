@@ -70,12 +70,21 @@ See [docs/keybinds.md](docs/keybinds.md) for the full reference.
 
 Grimoire reads `.grim` files — TOML with a specific schema. See [docs/file-format.md](docs/file-format.md) for the full specification.
 
+## Demo
+
+To record the demo GIF (requires [vhs](https://github.com/charmbracelet/vhs)):
+
+```sh
+vhs demo.tape
+```
+
 ## Documentation
 
 - [Installation](docs/install.md)
 - [Keybinds](docs/keybinds.md)
 - [File Format](docs/file-format.md)
 - [tmux Integration](docs/tmux.md)
+- [Man Page](docs/grimoire.1) — install with `cp docs/grimoire.1 /usr/local/share/man/man1/`
 
 ## Contributing
 

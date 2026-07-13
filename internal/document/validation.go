@@ -19,6 +19,7 @@ func (e ValidationError) Error() string {
 	return fmt.Sprintf("%s: %s", e.File, e.Message)
 }
 
+// Validate checks a parsed document for schema violations.
 func Validate(doc *Document) []ValidationError {
 	var errs []ValidationError
 	add := func(section string, item int, msg string) {

@@ -1,0 +1,12 @@
+format = 1
+
+title = "Bad Callout"
+
+[[sections]]
+id = "s1"
+title = "Section"
+
+[[sections.items]]
+type = "callout"
+style = "invalid_style"
+text = "This has an invalid callout style."

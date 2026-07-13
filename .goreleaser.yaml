@@ -19,6 +19,10 @@ builds:
 archives:
   - formats: [tar.gz]
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - docs/grimoire.1
     format_overrides:
       - goos: windows
         formats: [zip]

@@ -108,3 +108,67 @@ func TestValidationBadFormat(t *testing.T) {
 		t.Fatal("expected validation error for bad format")
 	}
 }
+
+func TestParse_BadTOML(t *testing.T) {
+	path, _ := filepath.Abs("../../testdata/invalid/bad_toml.grim")
+	_, err := Parse(path)
+	if err == nil {
+		t.Fatal("expected parse error for malformed TOML")
+	}
+}
+
+func TestParse_NonexistentFile(t *testing.T) {
+	_, err := Parse("/nonexistent/path.grim")
+	if err == nil {
+		t.Fatal("expected error for nonexistent file")
+	}
+}
+
+func TestValidation_InvalidFixtures(t *testing.T) {
+	tests := []struct {
+		file    string
+		wantErr string
+	}{
+		{"bad_format.grim", "unsupported format version"},
+		{"duplicate_ids.grim", "duplicate section id"},
+		{"missing_fields.grim", "command item requires a command field"},
+		{"bad_callout_style.grim", "invalid callout style"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.file, func(t *testing.T) {
+			path, _ := filepath.Abs("../../testdata/invalid/" + tt.file)
+			doc, err := Parse(path)
+			if err != nil {
+				t.Fatalf("unexpected parse error: %v", err)
+			}
+			errs := Validate(doc)
+			if len(errs) == 0 {
+				t.Fatal("expected validation errors")
+			}
+			found := false
+			for _, e := range errs {
+				if contains(e.Message, tt.wantErr) {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Errorf("expected error containing %q, got %v", tt.wantErr, errs)
+			}
+		})
+	}
+}
+
+func contains(s, substr string) bool {
+	return len(s) >= len(substr) && (s == substr || len(s) > 0 && containsHelper(s, substr))
+}
+
+func containsHelper(s, substr string) bool {
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
+}

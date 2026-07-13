@@ -1,0 +1,19 @@
+format = 1
+
+title = "Duplicate IDs"
+
+[[sections]]
+id = "basics"
+title = "Basics"
+
+[[sections.items]]
+type = "text"
+text = "First section."
+
+[[sections]]
+id = "basics"
+title = "Also Basics"
+
+[[sections.items]]
+type = "text"
+text = "Duplicate section ID."

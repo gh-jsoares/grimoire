@@ -92,6 +92,7 @@ type rawCard struct {
 	Copy        string `toml:"copy"`
 }
 
+// Parse reads and parses a .grim file at the given path.
 func Parse(path string) (*Document, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {

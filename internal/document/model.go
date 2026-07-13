@@ -1,5 +1,7 @@
+// Package document defines the data model for .grim cheatsheet files.
 package document
 
+// Document represents a parsed .grim cheatsheet file.
 type Document struct {
 	Path     string
 	Filename string
@@ -12,6 +14,7 @@ type Document struct {
 	Sections []Section
 }
 
+// Section is a named group of items within a document.
 type Section struct {
 	ID      string
 	Title   string
@@ -29,6 +32,7 @@ type Column struct {
 	Items    []Item
 }
 
+// Item is a single content element within a section (command, keybind-list, table, etc.).
 type Item struct {
 	Type string // "keybind-list" | "command" | "table" | "callout" | "cards" | "text" | "separator" | "link"
 

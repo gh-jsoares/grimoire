@@ -9,6 +9,7 @@ import (
 	"github.com/gh-jsoares/grimoire/internal/document"
 )
 
+// Load reads all .grim files from a directory and returns a Library.
 func Load(dir string) (*Library, error) {
 	info, err := os.Stat(dir)
 	if err != nil {
@@ -54,6 +55,7 @@ func Load(dir string) (*Library, error) {
 	return lib, nil
 }
 
+// LoadSingle parses a single .grim file into a one-document Library.
 func LoadSingle(path string) (*Library, error) {
 	doc, err := document.Parse(path)
 	if err != nil {

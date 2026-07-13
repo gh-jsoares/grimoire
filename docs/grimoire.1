@@ -1,0 +1,79 @@
+.TH GRIMOIRE 1 "2024-12-01" "grimoire" "User Commands"
+.SH NAME
+grimoire \- terminal cheatsheet viewer
+.SH SYNOPSIS
+.B grimoire
+[\fIoptions\fR] [\fIfile\fR|\fIname\fR|\fIdirectory\fR]
+.SH DESCRIPTION
+.B grimoire
+renders .grim TOML files as styled reference cards with responsive multi-column layout in the terminal.
+.PP
+When invoked without arguments, it opens the default library directory. When given a .grim file path, a document name/alias, or a directory, it opens accordingly.
+.SH OPTIONS
+.TP
+.B \-\-library \fIpath\fR
+Path to grimoire library directory.
+.TP
+.B \-\-tab \fIname\fR
+Select a document tab by name or alias.
+.TP
+.B \-\-section \fIid\fR
+Select a section by id.
+.TP
+.B \-\-no\-icons
+Disable Nerd Font icons.
+.TP
+.B \-\-plain
+Plain mode (minimal styling).
+.TP
+.B \-\-version
+Show version information.
+.SH KEYBINDS
+.TP
+.B H / L
+Switch tabs.
+.TP
+.B 1\-9
+Jump to tab.
+.TP
+.B j / k
+Scroll.
+.TP
+.B g / G
+Top / bottom.
+.TP
+.B Ctrl+d / Ctrl+u
+Half-page scroll.
+.TP
+.B n / N
+Next / previous command.
+.TP
+.B y
+Yank (copy) active command.
+.TP
+.B u
+Open link picker.
+.TP
+.B /
+Search.
+.TP
+.B q
+Quit.
+.SH LIBRARY RESOLUTION
+Grimoire looks for .grim files in the following order:
+.PP
+1. $GRIMOIRE_HOME
+.br
+2. $XDG_CONFIG_HOME/grimoire
+.br
+3. ~/.config/grimoire
+.SH FILES
+.TP
+.I ~/.config/grimoire/*.grim
+Default cheatsheet library location.
+.SH AUTHOR
+Joao Soares
+.SH SEE ALSO
+.BR tmux (1)
+.PP
+Project: https://github.com/gh-jsoares/grimoire

@@ -1,0 +1,7 @@
+format = 1
+
+title = "Bad TOML"
+
+[[sections]
+id = "broken"
+title = "This TOML is malformed - missing closing bracket"
