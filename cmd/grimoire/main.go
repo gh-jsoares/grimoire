@@ -21,12 +21,14 @@ var (
 
 func main() {
 	var (
-		libraryPath string
-		tabSelect   string
-		sectionSel  string
-		noIcons     bool
-		plain       bool
-		showVersion bool
+		libraryPath    string
+		tabSelect      string
+		sectionSel     string
+		noIcons        bool
+		plain          bool
+		noColor        bool
+		showVersion    bool
+		showCompletion string
 	)
 
 	flag.StringVar(&libraryPath, "library", "", "path to grimoire library directory")
@@ -34,12 +36,24 @@ func main() {
 	flag.StringVar(&sectionSel, "section", "", "select a section by id")
 	flag.BoolVar(&noIcons, "no-icons", false, "disable icons")
 	flag.BoolVar(&plain, "plain", false, "plain mode (minimal styling)")
+	flag.BoolVar(&noColor, "no-color", false, "disable color output")
 	flag.BoolVar(&showVersion, "version", false, "show version")
+	flag.StringVar(&showCompletion, "completion", "", "output shell completion (bash|zsh|fish)")
+	flag.Usage = usage
 	flag.Parse()
 
 	if showVersion {
 		fmt.Printf("grimoire %s (%s, %s)\n", version, commit, date)
 		os.Exit(0)
+	}
+
+	if showCompletion != "" {
+		printCompletion(showCompletion)
+		os.Exit(0)
+	}
+
+	if noColor {
+		_ = os.Setenv("NO_COLOR", "1")
 	}
 
 	arg := flag.Arg(0)
@@ -130,6 +144,85 @@ func main() {
 		fatal("runtime error: %v", err)
 	}
 }
+
+func usage() {
+	fmt.Fprintf(os.Stderr, `Usage: grimoire [options] [file|name|directory]
+
+A terminal cheatsheet viewer. Renders .grim files as styled reference cards.
+
+Arguments:
+  file          Open a .grim file directly
+  name          Open a document by name or alias
+  directory     Open a directory as a library
+
+Options:
+`)
+	flag.PrintDefaults()
+	fmt.Fprintf(os.Stderr, `
+Shell completion:
+  grimoire --completion bash >> ~/.bashrc
+  grimoire --completion zsh >> ~/.zshrc
+  grimoire --completion fish > ~/.config/fish/completions/grimoire.fish
+`)
+}
+
+func printCompletion(shell string) {
+	switch shell {
+	case "bash":
+		fmt.Print(bashCompletion)
+	case "zsh":
+		fmt.Print(zshCompletion)
+	case "fish":
+		fmt.Print(fishCompletion)
+	default:
+		fatal("unknown shell %q (use bash, zsh, or fish)", shell)
+	}
+}
+
+const bashCompletion = `_grimoire() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    case "$prev" in
+        --tab|--library|--section|--completion)
+            return 0
+            ;;
+    esac
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=($(compgen -W "--tab --library --section --no-icons --plain --no-color --version --completion" -- "$cur"))
+    else
+        COMPREPLY=($(compgen -f -X '!*.grim' -- "$cur"))
+    fi
+}
+complete -o default -F _grimoire grimoire
+`
+
+const zshCompletion = `#compdef grimoire
+
+_grimoire() {
+    _arguments \
+        '--tab[select a document tab by name or alias]:tab name:' \
+        '--library[path to grimoire library directory]:directory:_directories' \
+        '--section[select a section by id]:section id:' \
+        '--no-icons[disable icons]' \
+        '--plain[plain mode (minimal styling)]' \
+        '--no-color[disable color output]' \
+        '--version[show version]' \
+        '--completion[output shell completion]:shell:(bash zsh fish)' \
+        '*:file:_files -g "*.grim"'
+}
+
+_grimoire "$@"
+`
+
+const fishCompletion = `complete -c grimoire -l tab -d 'Select a document tab by name or alias'
+complete -c grimoire -l library -d 'Path to grimoire library directory' -r -F
+complete -c grimoire -l section -d 'Select a section by id'
+complete -c grimoire -l no-icons -d 'Disable icons'
+complete -c grimoire -l plain -d 'Plain mode (minimal styling)'
+complete -c grimoire -l no-color -d 'Disable color output'
+complete -c grimoire -l version -d 'Show version'
+complete -c grimoire -l completion -d 'Output shell completion' -r -f -a 'bash zsh fish'
+`
 
 func fatal(format string, args ...any) {
 	fmt.Fprintf(os.Stderr, "grimoire: "+format+"\n", args...)

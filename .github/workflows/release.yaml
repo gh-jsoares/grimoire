@@ -16,9 +16,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --tag ${GITHUB_REF_NAME}
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Commit changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git diff --cached --quiet || git commit -m "docs: update changelog for ${GITHUB_REF_NAME} [skip ci]"
+          git push origin HEAD:main
+
       - uses: actions/setup-go@v5
         with:
           go-version: "1.24"
+
+      - name: Run tests
+        run: go test ./...
 
       - uses: goreleaser/goreleaser-action@v6
         with:
@@ -26,3 +45,60 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Homebrew tap
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+
+          # Get checksums from goreleaser archives
+          SHA_DARWIN_ARM64=$(grep "grimoire_darwin_arm64.tar.gz" dist/checksums.txt | cut -d' ' -f1)
+          SHA_DARWIN_AMD64=$(grep "grimoire_darwin_amd64.tar.gz" dist/checksums.txt | cut -d' ' -f1)
+
+          git clone https://x-access-token:${TAP_TOKEN}@github.com/gh-jsoares/homebrew-tap.git tap
+          cd tap
+
+          cat > Formula/grimoire.rb << EOF
+          class Grimoire < Formula
+            desc "Terminal cheatsheet viewer"
+            homepage "https://github.com/gh-jsoares/grimoire"
+            version "${VERSION}"
+            license "MIT"
+
+            on_macos do
+              if Hardware::CPU.arm?
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_arm64.tar.gz"
+                sha256 "${SHA_DARWIN_ARM64}"
+              else
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_darwin_amd64.tar.gz"
+                sha256 "${SHA_DARWIN_AMD64}"
+              end
+            end
+
+            on_linux do
+              if Hardware::CPU.arm?
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_linux_arm64.tar.gz"
+              else
+                url "https://github.com/gh-jsoares/grimoire/releases/download/v#{version}/grimoire_linux_amd64.tar.gz"
+              end
+            end
+
+            def install
+              bin.install "grimoire"
+              man1.install "docs/grimoire.1"
+            end
+
+            test do
+              assert_match "grimoire", shell_output("#{bin}/grimoire --version")
+            end
+          end
+          EOF
+
+          sed -i 's/^          //' Formula/grimoire.rb
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/grimoire.rb
+          git commit -m "chore: update grimoire to v${VERSION}"
+          git push

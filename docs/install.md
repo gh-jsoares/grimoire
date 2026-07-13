@@ -14,7 +14,7 @@ cd grimoire
 make install
 ```
 
-## Homebrew (coming soon)
+## Homebrew
 
 ```sh
 brew install gh-jsoares/tap/grimoire

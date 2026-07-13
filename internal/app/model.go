@@ -291,9 +291,12 @@ func (m *Model) handleLinkKey(key string) tea.Cmd {
 	case "y", "enter":
 		if m.linkIdx >= 0 && m.linkIdx < len(m.links) {
 			url := m.links[m.linkIdx].URL
-			_ = clipboard.Copy(url)
+			if err := clipboard.Copy(url); err != nil {
+				m.flashMsg = "Copy failed: " + err.Error()
+			} else {
+				m.flashMsg = "Copied: " + url
+			}
 			m.showLinks = false
-			m.flashMsg = "Copied: " + url
 			return tea.Tick(2*time.Second, func(time.Time) tea.Msg {
 				return clearFlashMsg{}
 			})
@@ -419,8 +422,11 @@ func (m *Model) yankCommand() tea.Cmd {
 		return nil
 	}
 	cmd := m.commands[m.commandIdx]
-	_ = clipboard.Copy(cmd)
-	m.flashMsg = "Copied: " + cmd
+	if err := clipboard.Copy(cmd); err != nil {
+		m.flashMsg = "Copy failed: " + err.Error()
+	} else {
+		m.flashMsg = "Copied: " + cmd
+	}
 	return tea.Tick(2*time.Second, func(time.Time) tea.Msg {
 		return clearFlashMsg{}
 	})
@@ -437,6 +443,15 @@ func (m Model) contentHeight() int {
 func (m Model) View() string {
 	if !m.ready || m.Width == 0 {
 		return ""
+	}
+
+	if m.Width < 30 || m.Height < 10 {
+		return lipgloss.NewStyle().
+			Width(m.Width).
+			Height(m.Height).
+			Align(lipgloss.Center, lipgloss.Center).
+			Foreground(m.Theme.Muted).
+			Render("Terminal too small")
 	}
 
 	// Link overlay replaces the view entirely
