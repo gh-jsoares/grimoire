@@ -61,6 +61,21 @@ grimoire --library ~/dir  # Custom library path
 grimoire --completion zsh # Output shell completions
 ```
 
+### Shell Completions
+
+```sh
+# bash (add to ~/.bashrc)
+eval "$(grimoire --completion bash)"
+
+# zsh (add to ~/.zshrc, before compinit)
+eval "$(grimoire --completion zsh)"
+
+# fish (add to ~/.config/fish/config.fish)
+grimoire --completion fish | source
+```
+
+See [docs/completions.md](docs/completions.md) for static generation and caching strategies.
+
 ### tmux Popup
 
 Grimoire works great as a tmux popup. Add to your `tmux.conf`:
@@ -100,6 +115,7 @@ Grimoire reads `.grim` files — TOML with a specific schema. See [docs/file-for
 
 - [Keybinds](docs/keybinds.md)
 - [File Format](docs/file-format.md)
+- [Shell Completions](docs/completions.md)
 - [tmux Integration](docs/tmux.md)
 - [Man Page](docs/grimoire.1) — installed automatically via Homebrew or `install.sh`
 
