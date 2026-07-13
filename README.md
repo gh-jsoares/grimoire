@@ -21,13 +21,25 @@ A terminal cheatsheet viewer built with Go and the [Charm](https://charm.sh) eco
 - Nerd Font icon support
 - Vim-style keybinds
 
-## Install
+## Installation
+
+### Homebrew (recommended)
+
+```sh
+brew install gh-jsoares/tap/grimoire
+```
+
+### From release
+
+```sh
+curl -sSf https://raw.githubusercontent.com/gh-jsoares/grimoire/main/install.sh | sh
+```
+
+### From source
 
 ```sh
 go install github.com/gh-jsoares/grimoire/cmd/grimoire@latest
 ```
-
-See [docs/install.md](docs/install.md) for more installation methods.
 
 ## Usage
 
@@ -44,7 +56,9 @@ grimoire ~/sheets/    # Open a directory as library
 grimoire --tab git        # Start on a specific tab
 grimoire --no-icons       # Disable Nerd Font icons
 grimoire --plain          # Minimal styling
+grimoire --no-color       # Disable colors
 grimoire --library ~/dir  # Custom library path
+grimoire --completion zsh # Output shell completions
 ```
 
 ### Library Resolution
@@ -74,7 +88,6 @@ Grimoire reads `.grim` files — TOML with a specific schema. See [docs/file-for
 
 ## Documentation
 
-- [Installation](docs/install.md)
 - [Keybinds](docs/keybinds.md)
 - [File Format](docs/file-format.md)
 - [tmux Integration](docs/tmux.md)
