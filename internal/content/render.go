@@ -96,7 +96,7 @@ func RenderDocument(doc *document.Document, width, height int, t theme.Theme, ac
 			currentRow = nil
 			usedSlots = 0
 		}
-		currentRow = append(currentRow, rowEntry{sec: ss.sec, span: ss.span})
+		currentRow = append(currentRow, rowEntry(ss))
 		usedSlots += ss.span
 	}
 	if len(currentRow) > 0 {
