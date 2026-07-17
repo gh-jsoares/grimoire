@@ -1,17 +1,19 @@
 # Changelog
 
-## 1.1.0 — 2026-07-16
+## 1.1.0 — 2026-07-17
 
 ### Added
 
 - 12-column responsive grid system for section layout
-- Per-breakpoint span overrides (`span_lg`, `span_md`, `span_sm`)
-- Configurable breakpoints via `grimoire.toml` in library directory
-- Proportional width allocation within rows
 
 ### Documentation
 
-- Document grid system and `grimoire.toml` config in file-format.md
+- add shell completions guide with static generation
+- update changelog for v1.0.1 [skip ci]
+
+### Fixed
+
+- satisfy gosimple S1016 lint (type conversion)
 
 ## 1.0.1 — 2026-07-13
 
