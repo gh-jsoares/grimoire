@@ -23,6 +23,10 @@ type rawSection struct {
 	Title   string      `toml:"title"`
 	Icon    string      `toml:"icon"`
 	Order   *int        `toml:"order"`
+	Span    int         `toml:"span"`
+	SpanLg  int         `toml:"span_lg"`
+	SpanMd  int         `toml:"span_md"`
+	SpanSm  int         `toml:"span_sm"`
 	Layout  string      `toml:"layout"`
 	Items   []rawItem   `toml:"items"`
 	Columns []rawColumn `toml:"columns"`
@@ -127,6 +131,7 @@ func Parse(path string) (*Document, error) {
 			Title:  rs.Title,
 			Icon:   rs.Icon,
 			Order:  rs.Order,
+			Span:   buildSpanMap(rs),
 			Layout: rs.Layout,
 		}
 		if section.Layout == "" {
@@ -156,6 +161,33 @@ func Parse(path string) (*Document, error) {
 	}
 
 	return doc, nil
+}
+
+// buildSpanMap constructs the per-breakpoint span map from rawSection fields.
+// The "span" field sets the default for all breakpoints; span_lg, span_md, span_sm override.
+// If nothing is set, all breakpoints default to 0 (meaning full grid width, resolved at render time).
+func buildSpanMap(rs rawSection) map[string]int {
+	m := make(map[string]int)
+
+	// Default span applies to all known breakpoints
+	def := rs.Span // 0 means "use grid columns" (full width)
+
+	m["lg"] = def
+	m["md"] = def
+	m["sm"] = def
+
+	// Override with specific breakpoint values if non-zero
+	if rs.SpanLg > 0 {
+		m["lg"] = rs.SpanLg
+	}
+	if rs.SpanMd > 0 {
+		m["md"] = rs.SpanMd
+	}
+	if rs.SpanSm > 0 {
+		m["sm"] = rs.SpanSm
+	}
+
+	return m
 }
 
 func convertItem(ri rawItem) Item {

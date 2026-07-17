@@ -8,6 +8,8 @@ aliases = ["vi", "nvim"]
 [[sections]]
 id = "modes"
 title = "Modes"
+span = 4
+span_sm = 12
 
 [[sections.items]]
 type = "keybind-list"
@@ -35,6 +37,8 @@ description = "Normal mode"
 [[sections]]
 id = "movement"
 title = "Movement"
+span = 4
+span_sm = 12
 
 [[sections.items]]
 type = "keybind-list"
@@ -74,6 +78,8 @@ description = "Half-page up"
 [[sections]]
 id = "editing"
 title = "Editing"
+span = 4
+span_sm = 12
 
 [[sections.items]]
 type = "keybind-list"
@@ -109,6 +115,8 @@ description = "Repeat last change"
 [[sections]]
 id = "commands"
 title = "Commands"
+span = 6
+span_sm = 12
 
 [[sections.items]]
 type = "command"

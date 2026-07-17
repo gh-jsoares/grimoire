@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/gh-jsoares/grimoire/internal/clipboard"
+	"github.com/gh-jsoares/grimoire/internal/config"
 	"github.com/gh-jsoares/grimoire/internal/content"
 	"github.com/gh-jsoares/grimoire/internal/document"
 	"github.com/gh-jsoares/grimoire/internal/library"
@@ -30,6 +31,7 @@ type LinkEntry struct {
 type Model struct {
 	Library *library.Library
 	Config  Config
+	GridCfg config.GridConfig
 	Theme   theme.Theme
 
 	ActiveDoc int
@@ -60,7 +62,7 @@ type Model struct {
 	ready  bool
 }
 
-func New(lib *library.Library, cfg Config) Model {
+func New(lib *library.Library, cfg Config, gridCfg config.GridConfig) Model {
 	t := theme.Default()
 	if cfg.Plain {
 		t = theme.PlainTheme()
@@ -69,6 +71,7 @@ func New(lib *library.Library, cfg Config) Model {
 	m := Model{
 		Library:       lib,
 		Config:        cfg,
+		GridCfg:       gridCfg,
 		Theme:         t,
 		scrollOffsets: make(map[int]int),
 		commandIdx:    -1,
@@ -343,7 +346,7 @@ func (m *Model) computeTotalLines() {
 		return
 	}
 	doc := m.activeDocument()
-	rendered := content.RenderDocument(doc, m.Width-2, m.Height, m.Theme, -1)
+	rendered := content.RenderDocument(doc, m.Width-2, m.Height, m.Theme, -1, m.GridCfg)
 	m.totalLines = strings.Count(rendered, "\n") + 1
 }
 
@@ -465,7 +468,7 @@ func (m Model) View() string {
 	if m.searchQuery != "" && !m.searchFilter {
 		highlightQuery = m.searchQuery
 	}
-	rendered := content.RenderDocument(doc, m.Width-2, m.Height, m.Theme, m.commandIdx, highlightQuery)
+	rendered := content.RenderDocument(doc, m.Width-2, m.Height, m.Theme, m.commandIdx, m.GridCfg, highlightQuery)
 	lines := splitLines(rendered)
 	m.totalLines = len(lines)
 

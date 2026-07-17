@@ -13,7 +13,8 @@ A terminal cheatsheet viewer built with Go and the [Charm](https://charm.sh) eco
 
 ## Features
 
-- Responsive 1/2/3 column layout based on terminal width
+- 12-column responsive grid with configurable breakpoints
+- Per-section span control with breakpoint overrides
 - Tab switching between multiple cheatsheets
 - Command navigation and clipboard yanking
 - Link overlay picker
@@ -109,12 +110,49 @@ See [docs/keybinds.md](docs/keybinds.md) for the full reference.
 
 ## File Format
 
-Grimoire reads `.grim` files — TOML with a specific schema. See [docs/file-format.md](docs/file-format.md) for the full specification.
+Grimoire reads `.grim` files — TOML with a specific schema. Sections support a 12-column responsive grid:
+
+```toml
+[[sections]]
+id = "basics"
+title = "Basics"
+span = 4          # one-third width (4/12)
+span_sm = 12      # full width on narrow terminals
+layout = "stack"
+```
+
+Sections flow into rows automatically — when the next section doesn't fit, a new row starts. See [docs/file-format.md](docs/file-format.md) for the full specification.
+
+## Configuration
+
+Place a `grimoire.toml` in your library directory to customize the grid:
+
+```toml
+[grid]
+columns = 12
+
+[[grid.breakpoints]]
+name = "lg"
+min_width = 140
+
+[[grid.breakpoints]]
+name = "md"
+min_width = 90
+
+[[grid.breakpoints]]
+name = "sm"
+min_width = 0
+```
+
+Breakpoint names match the `span_<name>` fields on sections. The active breakpoint is the one with the highest `min_width` that fits the current terminal width.
+
+See [docs/configuration.md](docs/configuration.md) for details.
 
 ## Documentation
 
 - [Keybinds](docs/keybinds.md)
 - [File Format](docs/file-format.md)
+- [Configuration](docs/configuration.md)
 - [Shell Completions](docs/completions.md)
 - [tmux Integration](docs/tmux.md)
 - [Man Page](docs/grimoire.1) — installed automatically via Homebrew or `install.sh`

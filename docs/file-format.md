@@ -39,7 +39,49 @@ description = "Show help"
 |-------|----------|-------------|
 | `id` | Yes | Unique identifier |
 | `title` | Yes | Display title |
-| `layout` | No | `"stack"` (default) or `"grid"` |
+| `span` | No | Grid columns to occupy (1-12, default: 12 = full width) |
+| `span_lg` | No | Span override at `lg` breakpoint (≥140 chars) |
+| `span_md` | No | Span override at `md` breakpoint (≥90 chars) |
+| `span_sm` | No | Span override at `sm` breakpoint (<90 chars) |
+| `layout` | No | `"stack"` (default), `"columns"`, or `"grid"` |
+
+### Responsive Grid
+
+Grimoire uses a 12-column grid system. Sections flow left-to-right into rows; when the next section's span exceeds remaining slots, a new row starts.
+
+```toml
+[[sections]]
+id = "basics"
+title = "Basics"
+span = 4          # one-third width on large terminals
+span_sm = 12      # full width on small terminals
+layout = "stack"
+```
+
+Common span values:
+- `12` — full width (default)
+- `6` — half width
+- `4` — one-third
+- `3` — one-quarter
+
+Breakpoints and grid columns are configurable via `grimoire.toml` in your library directory:
+
+```toml
+[grid]
+columns = 12
+
+[[grid.breakpoints]]
+name = "lg"
+min_width = 140
+
+[[grid.breakpoints]]
+name = "md"
+min_width = 90
+
+[[grid.breakpoints]]
+name = "sm"
+min_width = 0
+```
 
 ## Item Types
 

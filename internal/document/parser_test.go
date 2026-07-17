@@ -172,3 +172,37 @@ func containsHelper(s, substr string) bool {
 	}
 	return false
 }
+
+func TestBuildSpanMap_Default(t *testing.T) {
+	rs := rawSection{Span: 6}
+	m := buildSpanMap(rs)
+	for _, bp := range []string{"lg", "md", "sm"} {
+		if m[bp] != 6 {
+			t.Errorf("span[%s] = %d, want 6", bp, m[bp])
+		}
+	}
+}
+
+func TestBuildSpanMap_Overrides(t *testing.T) {
+	rs := rawSection{Span: 4, SpanMd: 6, SpanSm: 12}
+	m := buildSpanMap(rs)
+	if m["lg"] != 4 {
+		t.Errorf("span[lg] = %d, want 4", m["lg"])
+	}
+	if m["md"] != 6 {
+		t.Errorf("span[md] = %d, want 6", m["md"])
+	}
+	if m["sm"] != 12 {
+		t.Errorf("span[sm] = %d, want 12", m["sm"])
+	}
+}
+
+func TestBuildSpanMap_NoSpan(t *testing.T) {
+	rs := rawSection{}
+	m := buildSpanMap(rs)
+	for _, bp := range []string{"lg", "md", "sm"} {
+		if m[bp] != 0 {
+			t.Errorf("span[%s] = %d, want 0 (full width)", bp, m[bp])
+		}
+	}
+}

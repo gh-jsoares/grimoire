@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/gh-jsoares/grimoire/internal/config"
 	"github.com/gh-jsoares/grimoire/internal/library"
 )
 
@@ -22,7 +23,7 @@ func testLibrary(t *testing.T) *library.Library {
 
 func TestNewModel(t *testing.T) {
 	lib := testLibrary(t)
-	m := New(lib, Config{})
+	m := New(lib, Config{}, config.DefaultConfig().Grid)
 	if len(m.Tabs.Tabs) != 2 {
 		t.Errorf("expected 2 tabs, got %d", len(m.Tabs.Tabs))
 	}
@@ -30,7 +31,7 @@ func TestNewModel(t *testing.T) {
 
 func TestViewAfterResize(t *testing.T) {
 	lib := testLibrary(t)
-	m := New(lib, Config{})
+	m := New(lib, Config{}, config.DefaultConfig().Grid)
 
 	result, _ := m.Update(tea.WindowSizeMsg{Width: 120, Height: 30})
 	model := result.(Model)
@@ -49,7 +50,7 @@ func TestViewAfterResize(t *testing.T) {
 
 func TestTabSwitch(t *testing.T) {
 	lib := testLibrary(t)
-	m := New(lib, Config{})
+	m := New(lib, Config{}, config.DefaultConfig().Grid)
 
 	result, _ := m.Update(tea.WindowSizeMsg{Width: 120, Height: 30})
 	result, _ = result.(Model).Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'L'}})
@@ -67,10 +68,10 @@ func TestTabSwitch(t *testing.T) {
 
 func TestScrollClamped(t *testing.T) {
 	lib := testLibrary(t)
-	m := New(lib, Config{})
+	m := New(lib, Config{}, config.DefaultConfig().Grid)
 
-	// At height=50 with content that fits, scroll should be clamped to 0
-	result, _ := m.Update(tea.WindowSizeMsg{Width: 120, Height: 50})
+	// At height=80 with content that fits, scroll should be clamped to 0
+	result, _ := m.Update(tea.WindowSizeMsg{Width: 120, Height: 80})
 	result, _ = result.(Model).Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'j'}})
 	model := result.(Model)
 
@@ -81,7 +82,7 @@ func TestScrollClamped(t *testing.T) {
 
 func TestScrollWhenNeeded(t *testing.T) {
 	lib := testLibrary(t)
-	m := New(lib, Config{})
+	m := New(lib, Config{}, config.DefaultConfig().Grid)
 
 	// At height=5, content should overflow and scroll should work
 	result, _ := m.Update(tea.WindowSizeMsg{Width: 120, Height: 5})
@@ -95,7 +96,7 @@ func TestScrollWhenNeeded(t *testing.T) {
 
 func TestNarrowLayout(t *testing.T) {
 	lib := testLibrary(t)
-	m := New(lib, Config{})
+	m := New(lib, Config{}, config.DefaultConfig().Grid)
 
 	result, _ := m.Update(tea.WindowSizeMsg{Width: 60, Height: 30})
 	model := result.(Model)

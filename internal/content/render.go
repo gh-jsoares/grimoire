@@ -4,11 +4,12 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/gh-jsoares/grimoire/internal/config"
 	"github.com/gh-jsoares/grimoire/internal/document"
 	"github.com/gh-jsoares/grimoire/internal/theme"
 )
 
-func RenderDocument(doc *document.Document, width, height int, t theme.Theme, activeCommand int, highlightQuery ...string) string {
+func RenderDocument(doc *document.Document, width, height int, t theme.Theme, activeCommand int, gridCfg config.GridConfig, highlightQuery ...string) string {
 	if len(doc.Sections) == 0 {
 		noResults := lipgloss.NewStyle().
 			Foreground(t.Muted).
@@ -23,62 +24,121 @@ func RenderDocument(doc *document.Document, width, height int, t theme.Theme, ac
 		query = highlightQuery[0]
 	}
 
-	cols := columnCount(width)
-	gap := 3
-	dividerWidth := 1
-	colWidth := (width - (cols-1)*(gap*2+dividerWidth)) / cols
+	// Determine active breakpoint based on terminal width
+	bp := gridCfg.ActiveBreakpoint(width)
+	gridCols := gridCfg.Columns
+	if gridCols <= 0 {
+		gridCols = 12
+	}
+
+	// Resolve span for each section at the active breakpoint
+	type sectionSpan struct {
+		sec  document.Section
+		span int
+	}
+	var sections []sectionSpan
+	for _, sec := range doc.Sections {
+		span := gridCols // default: full width
+		if sec.Span != nil {
+			if v, ok := sec.Span[bp]; ok && v > 0 {
+				span = v
+			}
+		}
+		if span > gridCols {
+			span = gridCols
+		}
+		sections = append(sections, sectionSpan{sec: sec, span: span})
+	}
+
+	// Check if everything is full-width (single column mode)
+	allFull := true
+	for _, ss := range sections {
+		if ss.span < gridCols {
+			allFull = false
+			break
+		}
+	}
 
 	cmdCounter := 0
 
-	var sectionBlocks []string
-	for _, sec := range doc.Sections {
-		block := renderSectionBlock(sec, colWidth, t, activeCommand, &cmdCounter, query)
-		sectionBlocks = append(sectionBlocks, block)
-	}
-
-	if cols == 1 {
-		result := ""
-		for i, block := range sectionBlocks {
+	if allFull {
+		var result string
+		for i, ss := range sections {
 			if i > 0 {
 				result += "\n\n"
 			}
-			result += block
+			result += renderSectionBlock(ss.sec, width, t, activeCommand, &cmdCounter, query)
 		}
 		return result
 	}
 
+	gap := 3
+	dividerWidth := 1
+
 	divider := lipgloss.NewStyle().Foreground(t.Border).Render("│")
 	spacer := strings.Repeat(" ", gap)
 
-	var rows []string
-	for i := 0; i < len(sectionBlocks); i += cols {
+	type rowEntry struct {
+		sec  document.Section
+		span int
+	}
+
+	// Flow sections into rows
+	var rows [][]rowEntry
+	var currentRow []rowEntry
+	usedSlots := 0
+
+	for _, ss := range sections {
+		if usedSlots+ss.span > gridCols {
+			if len(currentRow) > 0 {
+				rows = append(rows, currentRow)
+			}
+			currentRow = nil
+			usedSlots = 0
+		}
+		currentRow = append(currentRow, rowEntry{sec: ss.sec, span: ss.span})
+		usedSlots += ss.span
+	}
+	if len(currentRow) > 0 {
+		rows = append(rows, currentRow)
+	}
+
+	var renderedRows []string
+	for _, row := range rows {
+		// Calculate total spans and divider overhead for this row
+		numSections := len(row)
+		totalDividerWidth := (numSections - 1) * (gap*2 + dividerWidth)
+		contentWidth := width - totalDividerWidth
+		if contentWidth < numSections {
+			contentWidth = numSections
+		}
+
+		// Sum spans in this row
+		totalSpan := 0
+		for _, entry := range row {
+			totalSpan += entry.span
+		}
+
 		var rowParts []string
-		for c := 0; c < cols; c++ {
-			if c > 0 {
+		for i, entry := range row {
+			if i > 0 {
 				rowParts = append(rowParts, spacer+divider+spacer)
 			}
-			var content string
-			if i+c < len(sectionBlocks) {
-				content = sectionBlocks[i+c]
+			// Proportional width based on span
+			entryWidth := contentWidth * entry.span / totalSpan
+			if entryWidth < 1 {
+				entryWidth = 1
 			}
-			styled := lipgloss.NewStyle().Width(colWidth).Render(content)
+			block := renderSectionBlock(entry.sec, entryWidth, t, activeCommand, &cmdCounter, query)
+			styled := lipgloss.NewStyle().Width(entryWidth).Render(block)
 			rowParts = append(rowParts, styled)
 		}
-		row := lipgloss.JoinHorizontal(lipgloss.Top, rowParts...)
-		rows = append(rows, row)
+
+		renderedRow := lipgloss.JoinHorizontal(lipgloss.Top, rowParts...)
+		renderedRows = append(renderedRows, renderedRow)
 	}
 
-	return strings.Join(rows, "\n\n")
-}
-
-func columnCount(width int) int {
-	if width >= 140 {
-		return 3
-	}
-	if width >= 70 {
-		return 2
-	}
-	return 1
+	return strings.Join(renderedRows, "\n\n")
 }
 
 func renderSectionBlock(sec document.Section, width int, t theme.Theme, activeCommand int, cmdCounter *int, query string) string {

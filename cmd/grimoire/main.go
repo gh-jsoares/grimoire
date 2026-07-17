@@ -138,7 +138,10 @@ func main() {
 		InitSection: sectionSel,
 	}
 
-	model := app.New(lib, cfg)
+	// Load grid configuration from grimoire.toml in library directory
+	grimCfg := config.LoadConfig(config.ResolveLibraryPath())
+
+	model := app.New(lib, cfg, grimCfg.Grid)
 	p := tea.NewProgram(model, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fatal("runtime error: %v", err)

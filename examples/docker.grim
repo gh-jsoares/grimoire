@@ -8,6 +8,8 @@ aliases = ["dk"]
 [[sections]]
 id = "containers"
 title = "Containers"
+span = 4
+span_sm = 12
 
 [[sections.items]]
 type = "command"
@@ -37,6 +39,8 @@ description = "Follow container logs"
 [[sections]]
 id = "images"
 title = "Images"
+span = 4
+span_sm = 12
 
 [[sections.items]]
 type = "command"
@@ -56,6 +60,8 @@ description = "Remove an image"
 [[sections]]
 id = "cleanup"
 title = "Cleanup"
+span = 4
+span_sm = 12
 
 [[sections.items]]
 type = "callout"

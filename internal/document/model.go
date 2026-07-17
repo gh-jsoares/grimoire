@@ -20,7 +20,8 @@ type Section struct {
 	Title   string
 	Icon    string
 	Order   *int
-	Layout  string // "stack" | "columns" | "grid"
+	Span    map[string]int // keyed by breakpoint name, e.g. {"lg": 6, "md": 8, "sm": 12}
+	Layout  string         // "stack" | "columns" | "grid"
 	Items   []Item
 	Columns []Column
 }

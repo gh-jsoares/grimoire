@@ -34,26 +34,6 @@ func TestStripAnsi_Empty(t *testing.T) {
 	}
 }
 
-func TestColumnCount(t *testing.T) {
-	tests := []struct {
-		width int
-		want  int
-	}{
-		{50, 1},
-		{69, 1},
-		{70, 2},
-		{139, 2},
-		{140, 3},
-		{200, 3},
-	}
-	for _, tt := range tests {
-		got := columnCount(tt.width)
-		if got != tt.want {
-			t.Errorf("columnCount(%d) = %d, want %d", tt.width, got, tt.want)
-		}
-	}
-}
-
 func TestComputeTableWidths_Basic(t *testing.T) {
 	cols := []string{"Key", "Value"}
 	rows := []document.TableRow{
